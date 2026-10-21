@@ -2,17 +2,17 @@
 
 [ext_resource type="Script" uid="uid://vr1e5pxbjxm1" path="res://car.gd" id="1_7822p"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_72krn"]
-sky_top_color = Color(0.21262619, 0.42999694, 0.8193084, 1)
-sky_horizon_color = Color(0.2616676, 0.6963666, 0.9556945, 1)
-sky_curve = 0.33287075
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7822p"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 
-[sub_resource type="Sky" id="Sky_k61xc"]
-sky_material = SubResource("ProceduralSkyMaterial_72krn")
+[sub_resource type="Sky" id="Sky_uoj53"]
+sky_material = SubResource("ProceduralSkyMaterial_7822p")
 
-[sub_resource type="Environment" id="Environment_7822p"]
-sky = SubResource("Sky_k61xc")
-ambient_light_source = 3
+[sub_resource type="Environment" id="Environment_k61xc"]
+background_mode = 2
+sky = SubResource("Sky_uoj53")
+ambient_light_sky_contribution = 0.25
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pcilw"]
 size = Vector3(16.277344, 1, 19.47461)
@@ -50,15 +50,15 @@ top_radius = 0.140625
 bottom_radius = 0.140625
 height = 0.09643555
 
-[sub_resource type="PrismMesh" id="PrismMesh_5ji6q"]
-
 [node name="Node3D" type="Node3D" unique_id=1370922197]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1748420987]
-transform = Transform3D(1, 0, 0, 0, 0.67108774, 0.74137795, 0, -0.74137795, 0.67108774, 0, 4.572135, 3.4920387)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1473657570]
+transform = Transform3D(0.8660255, -0.43301263, 0.2499999, 2.7805944e-08, 0.49999994, 0.86602545, -0.49999994, -0.7500001, 0.43301266, 0, 6.6000004, -2.1000001)
+light_color = Color(1, 1, 0.7176471, 1)
+shadow_enabled = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1372192582]
-environment = SubResource("Environment_7822p")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=385378487]
+environment = SubResource("Environment_k61xc")
 
 [node name="piso" type="StaticBody3D" parent="." unique_id=1530202297]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -74,7 +74,6 @@ mesh = SubResource("BoxMesh_pcilw")
 surface_material_override/0 = SubResource("StandardMaterial3D_5w30v")
 
 [node name="VehicleBody3D" type="VehicleBody3D" parent="." unique_id=1907941845]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.080661476, -0.22001019)
 mass = 600.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.8, -0.1)
@@ -144,10 +143,17 @@ damping_relaxation = 0.015
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_5ji6q")
 
-[node name="Camera3D" type="Camera3D" parent="VehicleBody3D" unique_id=1387125149]
-transform = Transform3D(1, 0, 0, 0, 0.9396927, 0.34202015, 0, -0.34202015, 0.9396927, -0.03389056, 0.8696615, 0.5182976)
-current = true
+[node name="OrigemCamera" type="Node3D" parent="VehicleBody3D" unique_id=459303607]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.041800935, 0.5, -0.10000005)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=63691135]
-transform = Transform3D(2.1443415, 0, 1.6093956, 0, 0.99999994, 0, -3.567418, 0, 0.9673922, -4.2525654, 0.48153234, 3.8269072)
-mesh = SubResource("PrismMesh_5ji6q")
+[node name="SpringArm3D" type="SpringArm3D" parent="VehicleBody3D/OrigemCamera" unique_id=1468650979]
+spring_length = 2.0
+margin = 0.5
+
+[node name="Camera3D" type="Camera3D" parent="VehicleBody3D/OrigemCamera/SpringArm3D" unique_id=1269152662]
+transform = Transform3D(1, 0, 0, 0, 0.9848077, 0.17364818, 0, -0.17364818, 0.9848077, 0, 0.39999998, 0.9)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="." unique_id=452847684]
+transform = Transform3D(1.9106853e-15, 4.371139e-08, 1.8, 1, -4.371138e-08, -2.795293e-22, 4.371138e-08, 1, -7.86805e-08, 0, 0, 3.3)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 0.1, 2, 0.4, 2)
