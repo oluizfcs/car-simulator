@@ -1,11 +1,10 @@
 extends VehicleBody3D
 
 const FORCE = 500
-
+@onready var velocimetro = $CenterContainer/velocimetro
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -16,3 +15,4 @@ func _process(delta: float) -> void:
 	)
 	
 	engine_force = Input.get_axis("ui_down", "ui_up") * FORCE
+	velocimetro.text = "%d km/h" % round(linear_velocity.length() * 3.6)
