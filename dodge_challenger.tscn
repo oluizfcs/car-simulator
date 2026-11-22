@@ -56,6 +56,9 @@ resource_name = "Long Headlights"
 albedo_color = Color(0.9063318, 0.9063318, 0.9063318, 1)
 metallic = 0.4
 roughness = 0.18529642
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.0
 metadata/extras = {
 "fromFBX": {
 "isTruePBR": false,
@@ -68,6 +71,9 @@ resource_name = "Headlights"
 albedo_color = Color(0.9063318, 0.9063318, 0.9063318, 1)
 metallic = 0.4
 roughness = 0.18529642
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.0
 metadata/extras = {
 "fromFBX": {
 "isTruePBR": false,
@@ -77,9 +83,12 @@ metadata/extras = {
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mf8qr"]
 resource_name = "Tailights.002"
-albedo_color = Color(0.9063318, 0.9063318, 0.9063318, 1)
+albedo_color = Color(0.2901961, 0, 0, 1)
 metallic = 0.4
 roughness = 0.18529642
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 0.0
 metadata/extras = {
 "fromFBX": {
 "isTruePBR": false,
@@ -936,6 +945,12 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_iggmk")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pnbvw"]
+albedo_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_s5051"]
+material = SubResource("StandardMaterial3D_pnbvw")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_33nqe"]
 resource_name = "Middle"
 albedo_color = Color(0.23999271, 0.23999271, 0.23999271, 1)
@@ -1469,6 +1484,89 @@ font_size = 50
 outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 
+[sub_resource type="Gradient" id="Gradient_01ml5"]
+offsets = PackedFloat32Array(0, 0.45736435, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.95993763, 0.54989946, 0.070400305, 1, 0.46531433, 0.010330375, 0.012229206, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_01ml5"]
+gradient = SubResource("Gradient_01ml5")
+
+[sub_resource type="Curve" id="Curve_yv1ns"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.3820225), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_yv1ns"]
+curve = SubResource("Curve_yv1ns")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s5051"]
+direction = Vector3(0, 0, -1)
+spread = 15.0
+initial_velocity_min = 8.0
+initial_velocity_max = 12.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_yv1ns")
+color = Color(0.49831533, 0.28756985, 0.18723908, 1)
+color_ramp = SubResource("GradientTexture1D_01ml5")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_etv8c"]
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_pnbvw"]
+material = SubResource("StandardMaterial3D_etv8c")
+radius = 0.15
+height = 0.3
+
+[sub_resource type="Gradient" id="Gradient_yv1ns"]
+colors = PackedColorArray(0.9079417, 0.9079417, 0.90794164, 0.6, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gos0x"]
+gradient = SubResource("Gradient_yv1ns")
+
+[sub_resource type="Curve" id="Curve_t0o7d"]
+_limits = [0.0, 1.8, 0.0, 1.0]
+_data = [Vector2(0, 0.48876405), 0.0, 0.0, 0, 0, Vector2(1, 1.8), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_pnbvw"]
+curve = SubResource("Curve_t0o7d")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wktjl"]
+angle_min = -179.99998
+angle_max = 180.00002
+direction = Vector3(0, 1, 0)
+spread = 35.0
+initial_velocity_min = 0.5
+initial_velocity_max = 1.5
+gravity = Vector3(0, 0.4, 0)
+scale_min = 0.59999996
+scale_curve = SubResource("CurveTexture_pnbvw")
+color_ramp = SubResource("GradientTexture1D_gos0x")
+
+[sub_resource type="Gradient" id="Gradient_t0o7d"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_t0o7d"]
+gradient = SubResource("Gradient_t0o7d")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yv1ns"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("GradientTexture2D_t0o7d")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_01ml5"]
+material = SubResource("StandardMaterial3D_yv1ns")
+size = Vector2(1.2, 1.2)
+
 [node name="DodgeChallenger" type="VehicleBody3D" unique_id=1036446025]
 mass = 100.0
 gravity_scale = 4.0
@@ -1518,65 +1616,73 @@ mesh = SubResource("ArrayMesh_2wiku")
 transform = Transform3D(52.78, 0, 0, 0, -2.307087e-06, 52.78, 0, -52.78, -2.307087e-06, -0.45, -0.4, 0.22999999)
 mesh = SubResource("ArrayMesh_equor")
 
-[node name="VehicleWheel3D" type="VehicleWheel3D" parent="." unique_id=1096703306]
+[node name="esconderInterior" type="MeshInstance3D" parent="." unique_id=817585023]
+transform = Transform3D(0.78541285, 0, 0, 0, -4.371139e-08, -0.3083096, 0, 1, -1.3476641e-08, 0, -0.13832003, -0.6444398)
+mesh = SubResource("PlaneMesh_s5051")
+
+[node name="esconderInterior2" type="MeshInstance3D" parent="." unique_id=1274508047]
+transform = Transform3D(0.78541285, 0, 0, 0, 0.9967862, -0.04957071, 0, 0.080107816, 0.6168112, 0, 0.21167995, -1.2705197)
+mesh = SubResource("PlaneMesh_s5051")
+
+[node name="dianteiraEsquerda" type="VehicleWheel3D" parent="." unique_id=1096703306]
 transform = Transform3D(1, -1.0331604e-07, -8.940696e-08, 1.0331603e-07, 1, -4.3711385e-08, 8.940697e-08, 4.3711374e-08, 1, 0.93899995, -0.38320526, 1.7306075)
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.01
 wheel_radius = 0.45
 wheel_rest_length = 0.1
-wheel_friction_slip = 50.0
+wheel_friction_slip = 3.0
 suspension_stiffness = 100.0
 damping_compression = 0.5
 damping_relaxation = 2.0
 
-[node name="Wheel_001" type="MeshInstance3D" parent="VehicleWheel3D" unique_id=26378028]
+[node name="Wheel_001" type="MeshInstance3D" parent="dianteiraEsquerda" unique_id=26378028]
 transform = Transform3D(-4.9612396e-07, -4.961245e-07, 11.35, -11.35, -4.961243e-07, -4.961247e-07, 4.961243e-07, -11.35, -4.9612385e-07, 0, 0, 0)
 mesh = SubResource("ArrayMesh_23plh")
 
-[node name="VehicleWheel3D3" type="VehicleWheel3D" parent="." unique_id=1655932260]
+[node name="dianteiraDireita" type="VehicleWheel3D" parent="." unique_id=1655932260]
 transform = Transform3D(1, -1.0331604e-07, -8.940696e-08, 1.0331603e-07, 1, -4.3711385e-08, 8.940697e-08, 4.3711374e-08, 1, -0.939, -0.383, 1.701)
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.01
 wheel_radius = 0.45
 wheel_rest_length = 0.1
-wheel_friction_slip = 50.0
+wheel_friction_slip = 3.0
 suspension_stiffness = 100.0
 damping_compression = 0.5
 damping_relaxation = 2.0
 
-[node name="Wheel_004" type="MeshInstance3D" parent="VehicleWheel3D3" unique_id=502898558]
+[node name="Wheel_004" type="MeshInstance3D" parent="dianteiraDireita" unique_id=502898558]
 transform = Transform3D(-4.9612424e-07, 2.2099266e-06, -11.35, -11.35, 8.569012e-07, 4.961244e-07, 8.569013e-07, 11.35, 2.2099266e-06, 0, 0, 0)
 mesh = SubResource("ArrayMesh_gpk4t")
 
-[node name="VehicleWheel3D2" type="VehicleWheel3D" parent="." unique_id=353012091]
+[node name="traseiraEsquerda" type="VehicleWheel3D" parent="." unique_id=353012091]
 transform = Transform3D(1, -1.0331604e-07, -8.940696e-08, 1.0331603e-07, 1, -4.3711385e-08, 8.940697e-08, 4.3711374e-08, 1, 0.939, -0.383, -1.159)
 use_as_traction = true
 wheel_roll_influence = 0.01
 wheel_radius = 0.45
 wheel_rest_length = 0.07
-wheel_friction_slip = 50.0
+wheel_friction_slip = 3.0
 suspension_stiffness = 100.0
 damping_compression = 2.0
 damping_relaxation = 2.0
 
-[node name="Wheel_002" type="MeshInstance3D" parent="VehicleWheel3D2" unique_id=1398334908]
+[node name="Wheel_002" type="MeshInstance3D" parent="traseiraEsquerda" unique_id=1398334908]
 transform = Transform3D(-4.961242e-07, -4.961243e-07, 11.35, -11.35, -4.961243e-07, -4.9612424e-07, 4.961243e-07, -11.35, -4.961243e-07, 0, 0, 0)
 mesh = SubResource("ArrayMesh_74c5o")
 
-[node name="VehicleWheel3D4" type="VehicleWheel3D" parent="." unique_id=656653242]
+[node name="traseiraDireita" type="VehicleWheel3D" parent="." unique_id=656653242]
 transform = Transform3D(1, -1.0331604e-07, -8.940696e-08, 1.0331603e-07, 1, -4.3711385e-08, 8.940697e-08, 4.3711374e-08, 1, -0.939, -0.383, -1.159)
 use_as_traction = true
 wheel_roll_influence = 0.01
 wheel_radius = 0.45
 wheel_rest_length = 0.07
-wheel_friction_slip = 50.0
+wheel_friction_slip = 3.0
 suspension_stiffness = 100.0
 damping_compression = 2.0
 damping_relaxation = 2.0
 
-[node name="Wheel_003" type="MeshInstance3D" parent="VehicleWheel3D4" unique_id=201422510]
+[node name="Wheel_003" type="MeshInstance3D" parent="traseiraDireita" unique_id=201422510]
 transform = Transform3D(-4.9612424e-07, 2.2099266e-06, -11.35, -11.35, 8.569012e-07, 4.961244e-07, 8.569013e-07, 11.35, 2.2099266e-06, 0, 0, 0)
 mesh = SubResource("ArrayMesh_youhb")
 
@@ -1610,3 +1716,61 @@ offset_bottom = 69.0
 layout_mode = 2
 text = "Velocidade"
 label_settings = SubResource("LabelSettings_yv1ns")
+
+[node name="Farois" type="Node3D" parent="." unique_id=1816073456]
+
+[node name="FarolEsq" type="SpotLight3D" parent="Farois" unique_id=1191484205]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.64999974, 0, 2.4299998)
+light_color = Color(0.9098039, 0.95686275, 1, 1)
+light_energy = 10.0
+spot_range = 40.0
+
+[node name="FarolDir" type="SpotLight3D" parent="Farois" unique_id=751088752]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -0.6500002, 0, 2.4299998)
+light_color = Color(0.9098039, 0.95686275, 1, 1)
+light_energy = 10.0
+spot_range = 40.0
+
+[node name="LuzPlaca" type="SpotLight3D" parent="Farois" unique_id=549440397]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -0.06999999, -2.2099998)
+light_color = Color(0.9098039, 0.95686275, 1, 1)
+spot_range = 0.25
+spot_angle = 66.02
+
+[node name="Particulas" type="Node3D" parent="." unique_id=1660909846]
+
+[node name="fogoTurboDireita" type="GPUParticles3D" parent="Particulas" unique_id=1836052313]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.51, -0.41, -2.05)
+emitting = false
+amount = 60
+lifetime = 0.3
+preprocess = 0.1
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_s5051")
+draw_pass_1 = SubResource("SphereMesh_pnbvw")
+
+[node name="fogoTurboEsquerda" type="GPUParticles3D" parent="Particulas" unique_id=704132007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, -0.41, -2.05)
+emitting = false
+amount = 60
+lifetime = 0.3
+preprocess = 0.1
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_s5051")
+draw_pass_1 = SubResource("SphereMesh_pnbvw")
+
+[node name="fumacaDriftEsquerda" type="GPUParticles3D" parent="Particulas" unique_id=863128800]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, -0.75, -1.16)
+emitting = false
+amount = 120
+lifetime = 0.7
+process_material = SubResource("ParticleProcessMaterial_wktjl")
+draw_pass_1 = SubResource("QuadMesh_01ml5")
+
+[node name="fumacaDriftDireita" type="GPUParticles3D" parent="Particulas" unique_id=1662845816]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.81999993, -0.75, -1.16)
+emitting = false
+amount = 120
+lifetime = 0.7
+process_material = SubResource("ParticleProcessMaterial_wktjl")
+draw_pass_1 = SubResource("QuadMesh_01ml5")
