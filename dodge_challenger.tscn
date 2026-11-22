@@ -1,7 +1,12 @@
 [gd_scene format=4 uid="uid://b7j6tybc4tnio"]
 
 [ext_resource type="Script" uid="uid://xegso8p2c0q2" path="res://dodge_challenger.gd" id="1_fvvne"]
-[ext_resource type="Script" uid="uid://bshswsc05swo2" path="res://camera_pivot..gd" id="2_01ml5"]
+[ext_resource type="Script" uid="uid://ccjh2ojcdnl8o" path="res://camera_pivot.gd" id="2_01ml5"]
+[ext_resource type="Shader" uid="uid://1g71o1guv2oo" path="res://dodge_challenger.gdshader" id="3_aqvt7"]
+[ext_resource type="AudioStream" uid="uid://djvinr3xi78yo" path="res://Carros/Sounds/idle.wav" id="3_t0o7d"]
+[ext_resource type="AudioStream" uid="uid://whgae84pbv8h" path="res://Carros/Sounds/high.wav" id="4_wktjl"]
+[ext_resource type="AudioStream" uid="uid://cf6swibmfigid" path="res://Carros/Sounds/tires_squal_loop.wav" id="5_ieray"]
+[ext_resource type="AudioStream" uid="uid://ci2urs12ar8lu" path="res://Carros/Sounds/car-crash.wav" id="6_aqvt7"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1w5j"]
 resource_name = "Body"
@@ -123,7 +128,7 @@ metadata/extras = {
 resource_name = "Windows.002"
 transparency = 1
 cull_mode = 2
-albedo_color = Color(0, 0, 0, 0.5803922)
+albedo_color = Color(0, 0, 0, 0.19215687)
 metallic = 0.4
 roughness = 0.18529642
 metadata/extras = {
@@ -1475,14 +1480,36 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_3sbur")
 
-[sub_resource type="SystemFont" id="SystemFont_pcilw"]
-subpixel_positioning = 0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s5051"]
+bg_color = Color(0.0392, 0.051006664, 0.07, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.21900001, 0.25814998, 0.3, 0)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 14
+shadow_offset = Vector2(0, 6)
 
-[sub_resource type="LabelSettings" id="LabelSettings_yv1ns"]
-font = SubResource("SystemFont_pcilw")
-font_size = 50
-outline_size = 2
-outline_color = Color(0, 0, 0, 1)
+[sub_resource type="Gradient" id="Gradient_ieray"]
+offsets = PackedFloat32Array(0, 0.7, 0.82, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0.08, 0.09, 0.11, 0.75, 0.14, 0.16, 0.19, 1, 0.08, 0.09, 0.11, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pnbvw"]
+gradient = SubResource("Gradient_ieray")
+width = 120
+height = 120
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pnbvw"]
+shader = ExtResource("3_aqvt7")
+shader_parameter/intensidade = 0.0
 
 [sub_resource type="Gradient" id="Gradient_01ml5"]
 offsets = PackedFloat32Array(0, 0.45736435, 1)
@@ -1572,6 +1599,9 @@ mass = 100.0
 gravity_scale = 4.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.1, 0.5)
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 4
 script = ExtResource("1_fvvne")
 
 [node name="Chassi" type="MeshInstance3D" parent="." unique_id=649969495]
@@ -1708,14 +1738,68 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00035393238, -0.00034990907
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1388716257]
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer" unique_id=1671095375]
-offset_right = 1152.0
-offset_bottom = 69.0
+[node name="PainelVelocimetro" type="PanelContainer" parent="CanvasLayer" unique_id=577087319]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -186.0
+offset_top = -186.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_s5051")
 
-[node name="velocimetro" type="Label" parent="CanvasLayer/CenterContainer" unique_id=1017438094]
+[node name="Margem" type="MarginContainer" parent="CanvasLayer/PainelVelocimetro" unique_id=1872905980]
 layout_mode = 2
-text = "Velocidade"
-label_settings = SubResource("LabelSettings_yv1ns")
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ArcoVelocidade" type="TextureProgressBar" parent="CanvasLayer/PainelVelocimetro/Margem" unique_id=1308872909]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+max_value = 240.0
+fill_mode = 4
+radial_initial_angle = 255.0
+radial_fill_degrees = 270.0
+texture_under = SubResource("GradientTexture2D_pnbvw")
+texture_progress = SubResource("GradientTexture2D_pnbvw")
+tint_progress = Color(0.45, 0.72, 0.8, 1)
+
+[node name="CentroTexto" type="VBoxContainer" parent="CanvasLayer/PainelVelocimetro/Margem/ArcoVelocidade" unique_id=239343800]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="ValorVel" type="Label" parent="CanvasLayer/PainelVelocimetro/Margem/ArcoVelocidade/CentroTexto" unique_id=1253466722]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.93, 0.95, 1)
+theme_override_font_sizes/font_size = 30
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UnidadeVel" type="Label" parent="CanvasLayer/PainelVelocimetro/Margem/ArcoVelocidade/CentroTexto" unique_id=2060413204]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.55, 0.6, 1)
+theme_override_font_sizes/font_size = 10
+text = "km/h"
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1566016380]
+material = SubResource("ShaderMaterial_pnbvw")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="Farois" type="Node3D" parent="." unique_id=1816073456]
 
@@ -1742,7 +1826,7 @@ spot_angle = 66.02
 [node name="fogoTurboDireita" type="GPUParticles3D" parent="Particulas" unique_id=1836052313]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.51, -0.41, -2.05)
 emitting = false
-amount = 60
+amount = 120
 lifetime = 0.3
 preprocess = 0.1
 local_coords = true
@@ -1752,7 +1836,7 @@ draw_pass_1 = SubResource("SphereMesh_pnbvw")
 [node name="fogoTurboEsquerda" type="GPUParticles3D" parent="Particulas" unique_id=704132007]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, -0.41, -2.05)
 emitting = false
-amount = 60
+amount = 120
 lifetime = 0.3
 preprocess = 0.1
 local_coords = true
@@ -1762,7 +1846,7 @@ draw_pass_1 = SubResource("SphereMesh_pnbvw")
 [node name="fumacaDriftEsquerda" type="GPUParticles3D" parent="Particulas" unique_id=863128800]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, -0.75, -1.16)
 emitting = false
-amount = 120
+amount = 45
 lifetime = 0.7
 process_material = SubResource("ParticleProcessMaterial_wktjl")
 draw_pass_1 = SubResource("QuadMesh_01ml5")
@@ -1770,7 +1854,27 @@ draw_pass_1 = SubResource("QuadMesh_01ml5")
 [node name="fumacaDriftDireita" type="GPUParticles3D" parent="Particulas" unique_id=1662845816]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.81999993, -0.75, -1.16)
 emitting = false
-amount = 120
+amount = 45
 lifetime = 0.7
 process_material = SubResource("ParticleProcessMaterial_wktjl")
 draw_pass_1 = SubResource("QuadMesh_01ml5")
+
+[node name="SomMotorIdle" type="AudioStreamPlayer3D" parent="." unique_id=413386031]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 2.08)
+stream = ExtResource("3_t0o7d")
+autoplay = true
+bus = &"Motor"
+
+[node name="SomMotorHigh" type="AudioStreamPlayer3D" parent="." unique_id=2044707581]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 2.08)
+stream = ExtResource("4_wktjl")
+autoplay = true
+bus = &"Motor"
+
+[node name="SomPneu" type="AudioStreamPlayer3D" parent="." unique_id=684181595]
+stream = ExtResource("5_ieray")
+volume_db = -80.0
+autoplay = true
+
+[node name="SomBatida" type="AudioStreamPlayer3D" parent="." unique_id=561006629]
+stream = ExtResource("6_aqvt7")
