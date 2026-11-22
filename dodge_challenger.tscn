@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://b7j6tybc4tnio"]
 
 [ext_resource type="Script" uid="uid://xegso8p2c0q2" path="res://dodge_challenger.gd" id="1_fvvne"]
-[ext_resource type="Script" uid="uid://ccjh2ojcdnl8o" path="res://camera_pivot.gd" id="2_01ml5"]
+[ext_resource type="Script" uid="uid://bshswsc05swo2" path="res://camera_pivot..gd" id="2_01ml5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1w5j"]
 resource_name = "Body"
@@ -1461,6 +1461,7 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_3sbur")
 
 [sub_resource type="SystemFont" id="SystemFont_pcilw"]
+subpixel_positioning = 0
 
 [sub_resource type="LabelSettings" id="LabelSettings_yv1ns"]
 font = SubResource("SystemFont_pcilw")
