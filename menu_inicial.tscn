@@ -1712,9 +1712,11 @@ Mapa - Eduardo Serafim
 Carro - Luiz Felipe
 -- Assets --
 2015 Dodge Challenger by Grzybek [CC-BY] via Poly Pizza
-Chrysler LHS tire squeal 04 (04-25-2009).wav by audible-edge [CC-0] via Freesound 
-Car Crash by squareal [CC-0] via Freesound
-Truck Horn Long Length.wav by MisticalSounds2.o [CC-0] via Freesound"
+Chrysler LHS tire squeal 04 (04-25-2009).wav by audible-edge [CC0] via Freesound 
+Car Crash by squareal [CC0] via Freesound
+Truck Horn Long Length.wav by MisticalSounds2.o [CC0] via Freesound
+City Kit (Suburban) [CC0] via Kenney
+City Kit (Roads) [CC0] via Kenney"
 
 [node name="VoltarCreditos" type="Button" parent="Centro/PainelCreditos/Margem/VBox" unique_id=1882696461]
 layout_mode = 2
