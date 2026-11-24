@@ -5,6 +5,8 @@ const STEER_MAX = 0.45
 const STEER_SPEED = 1.8
 const FORCA_TURBO = 12000.0
 const FORCA_CONTROLE_AR = 3500.0
+const ALCANCE_BUZINA: float = 18.0
+const FORCA_BUZINA: float = 22.0
 @onready var roda_traseira_esquerda: VehicleWheel3D = $traseiraEsquerda
 @onready var roda_traseira_direita: VehicleWheel3D = $traseiraDireita
 @onready var roda_dianteira_esquerda: VehicleWheel3D = $dianteiraEsquerda
@@ -25,6 +27,7 @@ const FORCA_CONTROLE_AR = 3500.0
 @onready var arco_velocidade: TextureProgressBar = $CanvasLayer/PainelVelocimetro/Margem/ArcoVelocidade
 @onready var label_valor_vel: Label = $CanvasLayer/PainelVelocimetro/Margem/ArcoVelocidade/CentroTexto/ValorVel
 @onready var linhas_velocidade: ColorRect = $CanvasLayer/ColorRect
+@onready var som_buzina: AudioStreamPlayer3D = $SomBuzina
 var capo_aberto: bool = false
 var farol_ligado: bool = false
 var rpm_suavizado: float = 0.0
@@ -78,7 +81,7 @@ func _physics_process(delta: float) -> void:
 	engine_force = acel * FORCE
 	
 	if label_valor_vel:
-		label_valor_vel.text = "%d" % round(velocidade_kmh)
+		label_valor_vel.text = "%d" % round(velocidade_kmh / 2)
 
 	if arco_velocidade:
 		# Suaviza o movimento da barra
@@ -99,6 +102,10 @@ func _physics_process(delta: float) -> void:
 		roda_traseira_esquerda.get_skidinfo() < 0.85 or 
 		(Input.is_action_pressed("ui_select") and velocidade_kmh > 15.0)
 	)
+	
+	if Input.is_action_pressed("horn"):
+		som_buzina.play()
+		onda_de_choque_buzina()
 	
 	var esta_acelerando = Input.is_action_pressed("up") or Input.is_action_pressed("turbo")
 	
@@ -233,3 +240,46 @@ func resetar_tudo() -> void:
 	
 	# 2. Reseta todos os cones e objetos físicos do mapa
 	get_tree().call_group("objetos_resetaveis", "resetar_objeto")
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		get_tree().change_scene_to_file("res://menu_inicial.tscn")
+
+func onda_de_choque_buzina() -> void:
+	# Ponto de origem da onda: um pouco à frente do para-choque dianteiro
+	var origem_onda = global_position + (global_transform.basis.z * 2.5)
+	
+	# Pega todos os cones e objetos físicos do grupo que você já criou
+	for obj in get_tree().get_nodes_in_group("objetos_resetaveis"):
+		if obj is RigidBody3D:
+			var diferenca = obj.global_position - origem_onda
+			var distancia = diferenca.length()
+			
+			if distancia <= ALCANCE_BUZINA:
+				# Quanto mais perto do carro, mais forte o cone voa (de 0.2 até 1.0)
+				var fator_proximidade = clamp(1.0 - (distancia / ALCANCE_BUZINA), 0.2, 1.0)
+				var direcao = diferenca.normalized()
+				
+				# Adiciona um pouco de altura (Vector3.UP) para o cone levantar voo e capotar
+				var impulso = (direcao + Vector3.UP * 0.45).normalized() * FORCA_BUZINA * fator_proximidade
+				
+				obj.sleeping = false # Acorda o RigidBody3D caso esteja parado
+				obj.apply_central_impulse(impulso)
+				# Dá um leve giro aleatório no ar para não voarem todos retos iguais
+				obj.apply_torque_impulse(Vector3(randf_range(-2, 2), randf_range(-2, 2), randf_range(-2, 2)))
+				
+	var anel = get_node_or_null("OndaBuzina")
+	if anel:
+		# Faz o anel ignorar o movimento/rotação do pai (carro) no espaço 3D
+		anel.top_level = true
+		
+		# Posiciona exatamente onde o carro está no momento do disparo (rente ao chão)
+		anel.global_position = origem_onda - Vector3(0, 0.3, 0)
+		anel.global_rotation = Vector3.ZERO
+		anel.visible = true
+		anel.scale = Vector3(0.5, 0.5, 0.5)
+		
+		var tween = create_tween()
+		tween.tween_property(anel, "scale", Vector3(ALCANCE_BUZINA, 0.5, ALCANCE_BUZINA), 0.35)
+		tween.tween_callback(func(): anel.visible = false)

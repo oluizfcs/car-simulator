@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://whgae84pbv8h" path="res://Carros/Sounds/high.wav" id="4_wktjl"]
 [ext_resource type="AudioStream" uid="uid://cf6swibmfigid" path="res://Carros/Sounds/tires_squal_loop.wav" id="5_ieray"]
 [ext_resource type="AudioStream" uid="uid://ci2urs12ar8lu" path="res://Carros/Sounds/car-crash.wav" id="6_aqvt7"]
+[ext_resource type="AudioStream" uid="uid://ca380vuw3v6dx" path="res://Carros/Sounds/truck_horn.wav" id="6_bhhit"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1w5j"]
 resource_name = "Body"
@@ -1594,6 +1595,14 @@ particles_anim_loop = false
 material = SubResource("StandardMaterial3D_yv1ns")
 size = Vector2(1.2, 1.2)
 
+[sub_resource type="TorusMesh" id="TorusMesh_s5051"]
+inner_radius = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gos0x"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.627451)
+
 [node name="DodgeChallenger" type="VehicleBody3D" unique_id=1036446025]
 mass = 100.0
 gravity_scale = 4.0
@@ -1871,6 +1880,11 @@ stream = ExtResource("4_wktjl")
 autoplay = true
 bus = &"Motor"
 
+[node name="SomBuzina" type="AudioStreamPlayer3D" parent="." unique_id=347875300]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 2.08)
+stream = ExtResource("6_bhhit")
+volume_db = 10.0
+
 [node name="SomPneu" type="AudioStreamPlayer3D" parent="." unique_id=684181595]
 stream = ExtResource("5_ieray")
 volume_db = -80.0
@@ -1878,3 +1892,9 @@ autoplay = true
 
 [node name="SomBatida" type="AudioStreamPlayer3D" parent="." unique_id=561006629]
 stream = ExtResource("6_aqvt7")
+
+[node name="OndaBuzina" type="MeshInstance3D" parent="." unique_id=382054231]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.1399999)
+visible = false
+mesh = SubResource("TorusMesh_s5051")
+surface_material_override/0 = SubResource("StandardMaterial3D_gos0x")
