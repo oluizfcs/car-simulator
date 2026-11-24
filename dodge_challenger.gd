@@ -6,7 +6,7 @@ const STEER_SPEED = 1.8
 const FORCA_TURBO = 12000.0
 const FORCA_CONTROLE_AR = 3500.0
 const ALCANCE_BUZINA: float = 18.0
-const FORCA_BUZINA: float = 22.0
+const FORCA_BUZINA: float = 250.0
 @onready var roda_traseira_esquerda: VehicleWheel3D = $traseiraEsquerda
 @onready var roda_traseira_direita: VehicleWheel3D = $traseiraDireita
 @onready var roda_dianteira_esquerda: VehicleWheel3D = $dianteiraEsquerda
@@ -99,18 +99,18 @@ func _physics_process(delta: float) -> void:
 		roda_dianteira_direita.wheel_friction_slip = 3.0
 	
 	var derrapando_esq = roda_traseira_esquerda.is_in_contact() and (
-		roda_traseira_esquerda.get_skidinfo() < 0.85 or 
+		roda_traseira_esquerda.get_skidinfo() < 0.60 or 
 		(Input.is_action_pressed("ui_select") and velocidade_kmh > 15.0)
 	)
 	
-	if Input.is_action_pressed("horn"):
+	if Input.is_action_just_pressed("horn"):
 		som_buzina.play()
 		onda_de_choque_buzina()
 	
 	var esta_acelerando = Input.is_action_pressed("up") or Input.is_action_pressed("turbo")
 	
 	var derrapando_dir = roda_traseira_direita.is_in_contact() and (
-		roda_traseira_direita.get_skidinfo() < 0.5 or 
+		roda_traseira_direita.get_skidinfo() < 0.60 or 
 		(Input.is_action_pressed("ui_select") and velocidade_kmh > 15.0)
 	)
 	
@@ -126,9 +126,8 @@ func _physics_process(delta: float) -> void:
 		volume_pneu_atual = lerp(volume_pneu_atual, alvo_volume_pneu, 10.0 * delta)
 		
 		if volume_pneu_atual > 0.01:
-			som_pneu.volume_db = linear_to_db(volume_pneu_atual * 0.8) # 0.8 ajusta o volume máximo
-			# O chiado fica mais agudo quanto mais rápido o carro estiver deslizando
-			som_pneu.pitch_scale = clamp(lerp(0.85, 1.25, velocidade_kmh / 140.0), 0.85, 1.3)
+			som_pneu.volume_db = linear_to_db(volume_pneu_atual * 0.4) # 
+			som_pneu.pitch_scale = clamp(lerp(0.85, 1.0, velocidade_kmh / 140.0), 0.85, 1.3)
 		else:
 			som_pneu.volume_db = -80.0
 
