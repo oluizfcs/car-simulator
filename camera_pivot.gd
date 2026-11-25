@@ -132,6 +132,10 @@ func _physics_process(delta: float) -> void:
 
 func _angulo_traseiro_carro() -> float:
 	var frente = carro_alvo.global_transform.basis.z
+	frente.y = 0.0 # Ignora inclinação vertical do chassi no drift/saltos
+	if frente.length_squared() < 0.001:
+		return rotacao_y
+	frente = frente.normalized()
 	return atan2(-frente.x, -frente.z)
 
 func alternar_camera() -> void:
