@@ -82,6 +82,22 @@ func _physics_process(delta: float) -> void:
 	var acel = Input.get_axis("down", "up")
 	engine_force = acel * FORCE
 	
+# --- FREIO MOTOR, FREIO DE MÃO E PARADA COMPLETA ---
+	var no_chao = (
+		roda_traseira_esquerda.is_in_contact() or
+		roda_traseira_direita.is_in_contact() or
+		roda_dianteira_esquerda.is_in_contact() or
+		roda_dianteira_direita.is_in_contact()
+	)
+	
+	if acel == 0.0 and not usando_turbo and no_chao:
+		brake = 0.5
+		# Aumenta o amortecimento gradualmente abaixo de 12 km/h para parar sem afundar a suspensão
+		linear_damp = 4.0 if velocidade_kmh < 12.0 else 0.5
+	else:
+		brake = 0.0
+		linear_damp = 0.0
+		
 	if label_valor_vel:
 		label_valor_vel.text = "%d" % round(velocidade_kmh / 2)
 
