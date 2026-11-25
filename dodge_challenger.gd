@@ -40,7 +40,9 @@ var transform_inicial: Transform3D
 func _ready() -> void:
 	transform_inicial = global_transform
 	atualizar_farois()
-		
+	
+	add_to_group("player")
+	
 	var bus_idx = AudioServer.get_bus_index("Motor")
 	if bus_idx != -1 and AudioServer.get_bus_effect_count(bus_idx) > 0:
 		filtro_motor = AudioServer.get_bus_effect(bus_idx, 0)
@@ -249,7 +251,7 @@ func onda_de_choque_buzina() -> void:
 	# Ponto de origem da onda: um pouco à frente do para-choque dianteiro
 	var origem_onda = global_position + (global_transform.basis.z * 2.5)
 	
-	# Pega todos os cones e objetos físicos do grupo que você já criou
+	# Pega todos os cones, viaturas e objetos físicos do grupo
 	for obj in get_tree().get_nodes_in_group("objetos_resetaveis"):
 		if obj is RigidBody3D:
 			var diferenca = obj.global_position - origem_onda
@@ -267,6 +269,17 @@ func onda_de_choque_buzina() -> void:
 				obj.apply_central_impulse(impulso)
 				# Dá um leve giro aleatório no ar para não voarem todos retos iguais
 				obj.apply_torque_impulse(Vector3(randf_range(-2, 2), randf_range(-2, 2), randf_range(-2, 2)))
+				
+		elif obj.has_method("aplicar_impulso_buzina"):
+			var diferenca = obj.global_position - origem_onda
+			var distancia = diferenca.length()
+			
+			if distancia <= ALCANCE_BUZINA:
+				var fator_proximidade = clamp(1.0 - (distancia / ALCANCE_BUZINA), 0.3, 1.0)
+				var direcao = Vector3(diferenca.x, 0.0, diferenca.z).normalized()
+				# Arremessa a viatura para trás (35 m/s) e para o alto (14 m/s)
+				var impulso_viatura = (direcao * 35.0 + Vector3.UP * 14.0) * fator_proximidade
+				obj.aplicar_impulso_buzina(impulso_viatura)
 				
 	var anel = get_node_or_null("OndaBuzina")
 	if anel:
