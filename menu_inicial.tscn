@@ -1716,7 +1716,9 @@ Chrysler LHS tire squeal 04 (04-25-2009).wav by audible-edge [CC0] via Freesound
 Car Crash by squareal [CC0] via Freesound
 Truck Horn Long Length.wav by MisticalSounds2.o [CC0] via Freesound
 City Kit (Suburban) [CC0] via Kenney
-City Kit (Roads) [CC0] via Kenney"
+City Kit (Roads) [CC0] via Kenney
+Police Car by Quaternius [PDM] via Poly Pizza
+police siren.wav by vlammenos [CC0] via Freesound"
 
 [node name="VoltarCreditos" type="Button" parent="Centro/PainelCreditos/Margem/VBox" unique_id=1882696461]
 layout_mode = 2
