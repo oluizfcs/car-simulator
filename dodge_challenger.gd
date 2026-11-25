@@ -79,25 +79,41 @@ func _physics_process(delta: float) -> void:
 	var velocidade_volante = STEER_SPEED if input_direcao != 0 else STEER_SPEED * 1.8
 	steering = move_toward(steering, angulo_alvo, delta * velocidade_volante)
 	
-	# Aceleração
+	# Aceleração e Burnout (Borrachão)
 	var acel = Input.get_axis("down", "up")
-	engine_force = acel * FORCE
-	
-# --- FREIO MOTOR, FREIO DE MÃO E PARADA COMPLETA ---
+	var segurando_espaco = Input.is_action_pressed("ui_select")
 	var no_chao = (
 		roda_traseira_esquerda.is_in_contact() or
 		roda_traseira_direita.is_in_contact() or
 		roda_dianteira_esquerda.is_in_contact() or
 		roda_dianteira_direita.is_in_contact()
 	)
-	
-	if acel == 0.0 and not usando_turbo and no_chao:
-		brake = 0.5
-		# Aumenta o amortecimento gradualmente abaixo de 12 km/h para parar sem afundar a suspensão
-		linear_damp = 4.0 if velocidade_kmh < 12.0 else 0.5
-	else:
+
+	# Burnout: acelerando para frente + Espaço enquanto está parado ou bem devagar (< 18 km/h)
+	var fazendo_burnout = segurando_espaco and acel > 0.0 and velocidade_kmh < 18.0 and no_chao
+
+	# Zera freios individuais por padrão
+	roda_dianteira_esquerda.brake = 0.0
+	roda_dianteira_direita.brake = 0.0
+	roda_traseira_esquerda.brake = 0.0
+	roda_traseira_direita.brake = 0.0
+
+	if fazendo_burnout:
+		# Trava só as rodas da frente e joga força total nas traseiras para lixar pneu
 		brake = 0.0
-		linear_damp = 0.0
+		linear_damp = 13.0
+		roda_dianteira_esquerda.brake = 190.0
+		roda_dianteira_direita.brake = 190.0
+		engine_force = FORCE * 2.5
+	else:
+		engine_force = acel * FORCE
+		if acel == 0.0 and not usando_turbo and no_chao:
+			brake = 0.5
+			# Aumenta o amortecimento gradualmente abaixo de 12 km/h para parar sem afundar a suspensão
+			linear_damp = 4.0 if velocidade_kmh < 12.0 else 0.5
+		else:
+			brake = 0.0
+			linear_damp = 0.0
 		
 	if label_valor_vel:
 		label_valor_vel.text = "%d" % round(velocidade_kmh / 2)
@@ -106,7 +122,13 @@ func _physics_process(delta: float) -> void:
 		# Suaviza o movimento da barra
 		arco_velocidade.value = lerp(arco_velocidade.value, velocidade_kmh, clampf(10.0 * delta, 0.0, 1.0))
 		
-	if Input.is_action_pressed("ui_select"):
+	# Atrito dos pneus (Burnout vs Drift rápido vs Normal)
+	if fazendo_burnout:
+		roda_traseira_esquerda.wheel_friction_slip = 0.25
+		roda_traseira_direita.wheel_friction_slip = 0.25
+		roda_dianteira_esquerda.wheel_friction_slip = 4.0 # Frente bem presa no asfalto
+		roda_dianteira_direita.wheel_friction_slip = 4.0
+	elif segurando_espaco:
 		roda_traseira_esquerda.wheel_friction_slip = 0.8
 		roda_traseira_direita.wheel_friction_slip = 0.8
 		roda_dianteira_esquerda.wheel_friction_slip = 0.85
@@ -118,8 +140,9 @@ func _physics_process(delta: float) -> void:
 		roda_dianteira_direita.wheel_friction_slip = 3.0
 	
 	var derrapando_esq = roda_traseira_esquerda.is_in_contact() and (
+		fazendo_burnout or
 		roda_traseira_esquerda.get_skidinfo() < 0.60 or 
-		(Input.is_action_pressed("ui_select") and velocidade_kmh > 15.0)
+		(segurando_espaco and velocidade_kmh > 15.0)
 	)
 	
 	if Input.is_action_just_pressed("horn"):
@@ -129,8 +152,9 @@ func _physics_process(delta: float) -> void:
 	var esta_acelerando = Input.is_action_pressed("up") or Input.is_action_pressed("turbo")
 	
 	var derrapando_dir = roda_traseira_direita.is_in_contact() and (
+		fazendo_burnout or
 		roda_traseira_direita.get_skidinfo() < 0.60 or 
-		(Input.is_action_pressed("ui_select") and velocidade_kmh > 15.0)
+		(segurando_espaco and velocidade_kmh > 15.0)
 	)
 	
 	if cooldown_batida > 0.0:
@@ -145,8 +169,9 @@ func _physics_process(delta: float) -> void:
 		volume_pneu_atual = lerp(volume_pneu_atual, alvo_volume_pneu, 10.0 * delta)
 		
 		if volume_pneu_atual > 0.01:
-			som_pneu.volume_db = linear_to_db(volume_pneu_atual * 0.4) # 
-			som_pneu.pitch_scale = clamp(lerp(0.85, 1.0, velocidade_kmh / 140.0), 0.85, 1.3)
+			som_pneu.volume_db = linear_to_db(volume_pneu_atual * 0.4)
+			var vel_som = 90.0 if fazendo_burnout else velocidade_kmh
+			som_pneu.pitch_scale = clamp(lerp(0.85, 1.0, vel_som / 140.0), 0.85, 1.3)
 		else:
 			som_pneu.volume_db = -80.0
 

@@ -148,3 +148,14 @@ func alternar_camera() -> void:
 		cam_primeira_pessoa.current = false
 		rotacao_y = _angulo_traseiro_carro()
 		rotacao_x = ANGULO_X_PADRAO_3P
+
+func rotacionar_por_toque(relativo: Vector2) -> void:
+	tempo_sem_mouse = 0.0 # Zera o contador para a câmera não voltar enquanto você arrasta o dedo
+	rotacao_y -= relativo.x * sensibilidade_mouse
+	rotacao_x -= relativo.y * sensibilidade_mouse
+	
+	if em_primeira_pessoa:
+		rotacao_y = clamp(rotacao_y, deg_to_rad(-110), deg_to_rad(110))
+		rotacao_x = clamp(rotacao_x, deg_to_rad(-40), deg_to_rad(45))
+	else:
+		rotacao_x = clamp(rotacao_x, deg_to_rad(-80), deg_to_rad(15))

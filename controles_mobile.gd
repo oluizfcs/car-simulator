@@ -19,7 +19,11 @@ func _ready() -> void:
 	if not eh_mobile:
 		set_process_input(false)
 		return
-	
+
+	$ListaExtras/BtnMenu.pressed.connect(func():
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		get_tree().change_scene_to_file("res://menu_inicial.tscn")
+	)
 	$ListaExtras/BtnBuzina.pressed.connect(func():
 		if carro:
 			carro.som_buzina.play()
@@ -61,7 +65,7 @@ func _alternar_lista_extras() -> void:
 		lista_extras.visible = not lista_extras.visible
 
 # Controle de câmera arrastando o dedo na tela (multitoque independente dos botões)
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if not visible or not pivo_camera:
 		return
 
@@ -77,7 +81,8 @@ func _input(event: InputEvent) -> void:
 
 	elif event is InputEventScreenDrag:
 		if event.index == dedo_camera_id:
-			pivo_camera.rotate_y(-event.relative.x * sensibilidade_toque)
+			if pivo_camera.has_method("rotacionar_por_toque"):
+				pivo_camera.rotacionar_por_toque(event.relative)
 			# Limita a inclinação vertical da câmera para não atravessar o chão
 			var rot_x = clamp(pivo_camera.rotation.x - event.relative.y * sensibilidade_toque, deg_to_rad(-45.0), deg_to_rad(15.0))
 			pivo_camera.rotation.x = rot_x

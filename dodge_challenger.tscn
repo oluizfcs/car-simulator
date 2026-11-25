@@ -1521,7 +1521,7 @@ shader = ExtResource("3_aqvt7")
 shader_parameter/intensidade = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_j3pel"]
-radius = 39.1
+radius = 63.55
 
 [sub_resource type="Gradient" id="Gradient_01ml5"]
 offsets = PackedFloat32Array(0, 0.45736435, 1)
@@ -1834,54 +1834,32 @@ pivo_camera = NodePath("../../CameraPivot")
 carro = NodePath("../..")
 
 [node name="BtnEsquerda" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=2011348129]
-position = Vector2(78, 492)
+position = Vector2(85, 483)
 texture_normal = ExtResource("5_7faq4")
 shape = SubResource("CircleShape2D_j3pel")
 action = "left"
 
 [node name="BtnDireita" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=23970550]
-position = Vector2(217, 493)
+position = Vector2(224, 484)
 texture_normal = ExtResource("6_xh6vf")
 shape = SubResource("CircleShape2D_j3pel")
 action = "right"
 
-[node name="BtnAcelerar" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=1828440506]
-position = Vector2(871, 522)
-texture_normal = ExtResource("7_08kaf")
-shape = SubResource("CircleShape2D_j3pel")
-action = "up"
-
-[node name="BtnFreio" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=906723913]
-position = Vector2(729, 521)
-texture_normal = ExtResource("8_v0ac8")
-shape = SubResource("CircleShape2D_j3pel")
-action = "down"
-
-[node name="BtnTurbo" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=920102629]
-position = Vector2(874, 403)
-texture_normal = ExtResource("9_03ii0")
-shape = SubResource("CircleShape2D_j3pel")
-action = "turbo"
-
-[node name="BtnFreioMao" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=73225687]
-position = Vector2(726, 401)
-texture_normal = ExtResource("10_vgsq3")
-shape = SubResource("CircleShape2D_j3pel")
-action = "ui_select"
-
 [node name="BtnDesvirar" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=238447957]
-position = Vector2(1011, 277)
+position = Vector2(389, 485)
 texture_normal = ExtResource("11_d1gmi")
 shape = SubResource("CircleShape2D_j3pel")
 action = "flip"
 
 [node name="BtnMenuExtras" type="Button" parent="CanvasLayer/ControlesMobile" unique_id=1689686435]
-layout_mode = 0
-offset_left = 1027.0
-offset_top = 29.0
-offset_right = 1084.0
-offset_bottom = 60.0
-theme_override_font_sizes/font_size = 30
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -128.0
+offset_bottom = 63.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 40
 text = "Extras"
 
 [node name="ListaExtras" type="VBoxContainer" parent="CanvasLayer/ControlesMobile" unique_id=1195914222]
@@ -1889,30 +1867,71 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="BtnMenu" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=29822071]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Menu"
+
 [node name="BtnBuzina" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=121968369]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 40
 text = "Buzina"
 
 [node name="BtnFarol" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=670733615]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 40
 text = "Farol"
 
 [node name="BtnCapo" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=1424682253]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 40
 text = "Capô"
 
 [node name="BtnCamera" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=1566895599]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 40
 text = "Câmera"
 
 [node name="BtnReset" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=2119505900]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 40
 text = "Reiniciar"
+
+[node name="AncoraDireita" type="Control" parent="CanvasLayer/ControlesMobile" unique_id=1609092128]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="BtnAcelerar" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile/AncoraDireita" unique_id=1828440506]
+position = Vector2(-268, -268)
+texture_normal = ExtResource("7_08kaf")
+shape = SubResource("CircleShape2D_j3pel")
+action = "up"
+
+[node name="BtnFreio" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile/AncoraDireita" unique_id=906723913]
+position = Vector2(-272, -106)
+texture_normal = ExtResource("8_v0ac8")
+shape = SubResource("CircleShape2D_j3pel")
+action = "down"
+
+[node name="BtnTurbo" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile/AncoraDireita" unique_id=920102629]
+position = Vector2(-106, -295)
+texture_normal = ExtResource("9_03ii0")
+shape = SubResource("CircleShape2D_j3pel")
+action = "turbo"
+
+[node name="BtnFreioMao" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile/AncoraDireita" unique_id=73225687]
+position = Vector2(-428, -112)
+texture_normal = ExtResource("10_vgsq3")
+shape = SubResource("CircleShape2D_j3pel")
+action = "ui_select"
 
 [node name="Farois" type="Node3D" parent="." unique_id=1816073456]
 
