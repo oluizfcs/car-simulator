@@ -38,14 +38,15 @@ var velocidade_anterior: Vector3 = Vector3.ZERO
 var transform_inicial: Transform3D
 
 func _ready() -> void:
-	transform_inicial = global_transform
 	atualizar_farois()
-	
 	add_to_group("player")
 	
 	var bus_idx = AudioServer.get_bus_index("Motor")
 	if bus_idx != -1 and AudioServer.get_bus_effect_count(bus_idx) > 0:
 		filtro_motor = AudioServer.get_bus_effect(bus_idx, 0)
+		
+	await get_tree().physics_frame
+	transform_inicial = global_transform
 
 func _physics_process(delta: float) -> void:
 	var velocidade_kmh = linear_velocity.length() * 3.6
@@ -247,15 +248,32 @@ func atualizar_som_motor(delta: float, velocidade_kmh: float, acelerando: bool, 
 		filtro_motor.cutoff_hz = lerp(filtro_motor.cutoff_hz, freq_alvo, 10.0 * delta)
 
 func resetar_tudo() -> void:
-	# 1. Reseta o carro (posição, rotação, velocidades e volante)
+	engine_force = 0.0
+	brake = 0.0
+	steering = 0.0
+	linear_damp = 0.0
+	velocidade_anterior = Vector3.ZERO
+	
+	PhysicsServer3D.body_set_state(
+		get_rid(),
+		PhysicsServer3D.BODY_STATE_TRANSFORM,
+		transform_inicial
+	)
+	PhysicsServer3D.body_set_state(
+		get_rid(),
+		PhysicsServer3D.BODY_STATE_LINEAR_VELOCITY,
+		Vector3.ZERO
+	)
+	PhysicsServer3D.body_set_state(
+		get_rid(),
+		PhysicsServer3D.BODY_STATE_ANGULAR_VELOCITY,
+		Vector3.ZERO
+	)
+	
+	global_transform = transform_inicial
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
-	velocidade_anterior = Vector3.ZERO
-	engine_force = 0.0
-	steering = 0.0
-	global_transform = transform_inicial
 	
-	# 2. Reseta todos os cones e objetos físicos do mapa
 	get_tree().call_group("objetos_resetaveis", "resetar_objeto")
 
 func _unhandled_input(event: InputEvent) -> void:

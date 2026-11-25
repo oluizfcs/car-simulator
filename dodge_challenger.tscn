@@ -4,10 +4,18 @@
 [ext_resource type="Script" uid="uid://ccjh2ojcdnl8o" path="res://camera_pivot.gd" id="2_01ml5"]
 [ext_resource type="Shader" uid="uid://1g71o1guv2oo" path="res://dodge_challenger.gdshader" id="3_aqvt7"]
 [ext_resource type="AudioStream" uid="uid://djvinr3xi78yo" path="res://Carros/Sounds/idle.wav" id="3_t0o7d"]
+[ext_resource type="Script" uid="uid://cybfsh4cukm3h" path="res://controles_mobile.gd" id="4_rkk43"]
 [ext_resource type="AudioStream" uid="uid://whgae84pbv8h" path="res://Carros/Sounds/high.wav" id="4_wktjl"]
+[ext_resource type="Texture2D" uid="uid://d1ioywdvw2fpb" path="res://assets/svgs/arrow_left.svg" id="5_7faq4"]
 [ext_resource type="AudioStream" uid="uid://cf6swibmfigid" path="res://Carros/Sounds/tires_squal_loop.wav" id="5_ieray"]
 [ext_resource type="AudioStream" uid="uid://ci2urs12ar8lu" path="res://Carros/Sounds/car-crash.wav" id="6_aqvt7"]
 [ext_resource type="AudioStream" uid="uid://ca380vuw3v6dx" path="res://Carros/Sounds/truck_horn.wav" id="6_bhhit"]
+[ext_resource type="Texture2D" uid="uid://cvmog47nogp7y" path="res://assets/svgs/arrow_right.svg" id="6_xh6vf"]
+[ext_resource type="Texture2D" uid="uid://hg0iq110qsvs" path="res://assets/svgs/arrow_up.svg" id="7_08kaf"]
+[ext_resource type="Texture2D" uid="uid://dyo71n5rp7xgs" path="res://assets/svgs/arrow_down.svg" id="8_v0ac8"]
+[ext_resource type="Texture2D" uid="uid://idnosnw2uocu" path="res://assets/svgs/rocketship.svg" id="9_03ii0"]
+[ext_resource type="Texture2D" uid="uid://bkyftstqqmtly" path="res://assets/svgs/arrow_down_from_line.svg" id="10_vgsq3"]
+[ext_resource type="Texture2D" uid="uid://bufbn1kw55mqn" path="res://assets/svgs/rotate.svg" id="11_d1gmi"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1w5j"]
 resource_name = "Body"
@@ -1512,6 +1520,9 @@ fill_to = Vector2(0.5, 0)
 shader = ExtResource("3_aqvt7")
 shader_parameter/intensidade = 0.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_j3pel"]
+radius = 39.1
+
 [sub_resource type="Gradient" id="Gradient_01ml5"]
 offsets = PackedFloat32Array(0, 0.45736435, 1)
 colors = PackedColorArray(1, 1, 1, 1, 0.95993763, 0.54989946, 0.070400305, 1, 0.46531433, 0.010330375, 0.012229206, 1)
@@ -1809,6 +1820,99 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="ControlesMobile" type="Control" parent="CanvasLayer" unique_id=1820773545 node_paths=PackedStringArray("pivo_camera", "carro")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4_rkk43")
+pivo_camera = NodePath("../../CameraPivot")
+carro = NodePath("../..")
+
+[node name="BtnEsquerda" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=2011348129]
+position = Vector2(78, 492)
+texture_normal = ExtResource("5_7faq4")
+shape = SubResource("CircleShape2D_j3pel")
+action = "left"
+
+[node name="BtnDireita" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=23970550]
+position = Vector2(217, 493)
+texture_normal = ExtResource("6_xh6vf")
+shape = SubResource("CircleShape2D_j3pel")
+action = "right"
+
+[node name="BtnAcelerar" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=1828440506]
+position = Vector2(871, 522)
+texture_normal = ExtResource("7_08kaf")
+shape = SubResource("CircleShape2D_j3pel")
+action = "up"
+
+[node name="BtnFreio" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=906723913]
+position = Vector2(729, 521)
+texture_normal = ExtResource("8_v0ac8")
+shape = SubResource("CircleShape2D_j3pel")
+action = "down"
+
+[node name="BtnTurbo" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=920102629]
+position = Vector2(874, 403)
+texture_normal = ExtResource("9_03ii0")
+shape = SubResource("CircleShape2D_j3pel")
+action = "turbo"
+
+[node name="BtnFreioMao" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=73225687]
+position = Vector2(726, 401)
+texture_normal = ExtResource("10_vgsq3")
+shape = SubResource("CircleShape2D_j3pel")
+action = "ui_select"
+
+[node name="BtnDesvirar" type="TouchScreenButton" parent="CanvasLayer/ControlesMobile" unique_id=238447957]
+position = Vector2(1011, 277)
+texture_normal = ExtResource("11_d1gmi")
+shape = SubResource("CircleShape2D_j3pel")
+action = "flip"
+
+[node name="BtnMenuExtras" type="Button" parent="CanvasLayer/ControlesMobile" unique_id=1689686435]
+layout_mode = 0
+offset_left = 1027.0
+offset_top = 29.0
+offset_right = 1084.0
+offset_bottom = 60.0
+theme_override_font_sizes/font_size = 30
+text = "Extras"
+
+[node name="ListaExtras" type="VBoxContainer" parent="CanvasLayer/ControlesMobile" unique_id=1195914222]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BtnBuzina" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=121968369]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Buzina"
+
+[node name="BtnFarol" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=670733615]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Farol"
+
+[node name="BtnCapo" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=1424682253]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Capô"
+
+[node name="BtnCamera" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=1566895599]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Câmera"
+
+[node name="BtnReset" type="Button" parent="CanvasLayer/ControlesMobile/ListaExtras" unique_id=2119505900]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Reiniciar"
 
 [node name="Farois" type="Node3D" parent="." unique_id=1816073456]
 
