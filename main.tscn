@@ -341,7 +341,13 @@ transform = Transform3D(1.6460531, 0, 9.660629, 0, 10.999999, 0, -8.649771, 0, 1
 [node name="road-slant-curve4" parent="." unique_id=1201341941 instance=ExtResource("13_w48qg")]
 transform = Transform3D(-1.2155049, 0, -9.920761, 0, 1.2590041, 0, 6.312028, 0, -1.9104377, 176.85759, 0.08, 30.753323)
 
+[node name="road-slant-curve7" parent="." unique_id=1062552734 instance=ExtResource("13_w48qg")]
+transform = Transform3D(-1.2155049, 0, -9.920761, 0, 1.2590041, 0, 6.312028, 0, -1.9104377, 188.4818, 0.08, 82.56965)
+
 [node name="road-slant-curve5" parent="." unique_id=324587964 instance=ExtResource("13_w48qg")]
+transform = Transform3D(1.6117016, 0, 9.780311, 0, 1.2590041, 0, -6.2226677, 0, 2.5331497, 184.894, 0.1, 99.701)
+
+[node name="road-slant-curve6" parent="." unique_id=194389459 instance=ExtResource("13_w48qg")]
 transform = Transform3D(1.2444199, 0, 9.911902, 0, 1.2590041, 0, -6.306392, 0, 1.9558845, 173.2702, 0.08, 48.5157)
 
 [node name="fence-3x32" parent="." unique_id=1353335486 instance=ExtResource("14_vivmo")]
